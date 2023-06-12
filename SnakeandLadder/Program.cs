@@ -2,68 +2,48 @@
 {
     internal class Program
     {
-        public const int START_POINT = 0;
-        public const int END_POINT = 100;
+        public const int NO_OF_PLAYERS = 1;
+        public const int INITIAL_POSITION = 0;
         public const int NO_PLAY = 0;
-        public const int SNAKE = 1;
-        public const int LADDER = 2;
-        static void Main(string[] args)
+        public const int LADDER = 1;
+        public const int SNAKE = 2;
+        public const int WINNING_POSITION = 100;
+        static void Main(String[] args)
         {
-            Console.WriteLine("Welcome to snakes and ladders game \nEnter player name");
-            string player1 = Console.ReadLine();
-            int playerCurrentPosition = START_POINT;
-            for (int noOfTimesDiceRolled = 1; playerCurrentPosition < 100; noOfTimesDiceRolled++)
+            int currPosition = INITIAL_POSITION;
+            int moves = 0;
+            Console.WriteLine("Welcome to Snake Ladder Game!!!");
+            Console.WriteLine("Player is at the starting position");
+            while (currPosition != WINNING_POSITION)
             {
-                int diceRoll = DiceRoll();
-                Console.WriteLine("You rolled: " + diceRoll);
-                playerCurrentPosition = PlayerMovement(diceRoll, playerCurrentPosition);
-                Console.WriteLine("Your position: " + playerCurrentPosition);
-                if (playerCurrentPosition == 100)
+                Random random = new Random();
+                int diceValue = random.Next(1, 7);
+                Console.WriteLine("Player rolled : " + diceValue);
+                int actionTaken = random.Next(0, 3);
+                if (actionTaken == NO_PLAY)
                 {
-                    Console.WriteLine("Game Over");
-                    break;
+                    Console.WriteLine("No action taken");
                 }
-                Console.ReadLine();
+                else if (actionTaken == LADDER)
+                {
+                    currPosition += diceValue;
+                    if (currPosition > WINNING_POSITION)
+                    {
+                        currPosition -= diceValue;
+                    }
+                }
+                else
+                {
+                    currPosition -= diceValue;
+                    if (currPosition < INITIAL_POSITION)
+                    {
+                        currPosition = INITIAL_POSITION;
+                    }
+                }
+                moves++;
+                Console.WriteLine("Player is at position : " + currPosition);
             }
-        }
-        static int DiceRoll()
-        {
-            Random random = new Random();
-            int diceNumber = random.Next(1, 7);
-            return diceNumber;
-        }
-        static int PlayerMovement(int numberRolled, int playerPosition)
-        {
-            Random random = new Random();
-            int move = random.Next(0, 3);
-            switch (move)
-            {
-                case NO_PLAY:
-                    Console.WriteLine("No Play");
-                    break;
-                case SNAKE:
-                    Console.WriteLine("Snake");
-                    if (playerPosition - numberRolled >= 0)
-                    {
-                        playerPosition = playerPosition - numberRolled;
-                        break;
-                    }
-                    else
-                    {
-                        playerPosition = START_POINT;
-                        break;
-                    }
-                case LADDER:
-                    Console.WriteLine("Ladder");
-                    if (playerPosition + numberRolled <= 100)
-                    {
-                        playerPosition = playerPosition + numberRolled;
-                        break;
-                    }
-                    else
-                        break;
-            }
-            return playerPosition;
+            Console.WriteLine("Player reaches exact winning position in : " + moves + " moves");
         }
     }
 
